@@ -13,6 +13,8 @@
     - составной btree-индекс на столбцах (node1, node2) m2m таблицы дружеских связей;
     - кластеризация m2m таблицы по индексу;
     - btree-индекс на столбцах node1 и node2 (отдельно для каждого) таблицы graph_links с низким fillfactor'ом;
+
+Резюмируя можно сказать, что PostgreSQL, вероятно, не создана для работы с огромным количеством данных в графовых структурах.
 """
 
 create or replace function create_neighbours(starting_point_id bigint)
