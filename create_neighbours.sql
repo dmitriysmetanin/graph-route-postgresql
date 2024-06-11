@@ -1,4 +1,20 @@
-create or replace function create_friends(starting_point_id bigint)
+"""
+Таблица m2m связей - graph_links (id bigint, node1 bigint, node2 bigint)
+Сервисная таблица - graph_service_table (id bigint, p1 bigint, p2 bigint, p3 bigint, p4 bigint, p5 bigint)
+
+Алгоритм не является оптимальным. 
+Как можно улучшить:
+    - добавить в функцию конечное значение (id 2-го пользователя или 2-й точки);
+    - после каждой итерации i-й проверять, присутствует ли строка с конечным значением в i-ом столбце;
+    - если присутствует, то это кратчайший путь и нет смысла искать соседей дальше.
+
+На графе из малого количества узлов все работает прекрасно, однако в случае 12млн. пользователей ВК и 600к дружеских связей вычисления слишком долгие.
+Как можно улучшить:
+    - составной btree-индекс на столбцах (node1, node2) m2m таблицы дружеских связей;
+    - btree-индекс на столбцах node1 и node2 (отдельно для каждого) таблицы graph_links с низким fillfactor'ом;
+"""
+
+create or replace function create_neighbours(starting_point_id bigint)
     returns bool
     language plpgsql
 as
